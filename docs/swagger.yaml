@@ -1,0 +1,513 @@
+basePath: /
+definitions:
+  handlers.Response:
+    properties:
+      data: {}
+      error:
+        type: string
+      message:
+        type: string
+      success:
+        type: boolean
+    type: object
+  models.CreatePetRequest:
+    properties:
+      age:
+        type: integer
+      available:
+        type: boolean
+      breed:
+        type: string
+      description:
+        type: string
+      name:
+        type: string
+      price:
+        type: number
+      seller_id:
+        type: integer
+      species:
+        type: string
+    required:
+    - name
+    - seller_id
+    - species
+    type: object
+  models.CreateSellerRequest:
+    properties:
+      address:
+        type: string
+      email:
+        type: string
+      name:
+        type: string
+      phone:
+        type: string
+    required:
+    - email
+    - name
+    type: object
+  models.Pet:
+    properties:
+      age:
+        type: integer
+      available:
+        type: boolean
+      breed:
+        type: string
+      created_at:
+        type: string
+      description:
+        type: string
+      id:
+        type: integer
+      name:
+        type: string
+      price:
+        type: number
+      seller:
+        $ref: '#/definitions/models.Seller'
+      seller_id:
+        type: integer
+      species:
+        type: string
+      updated_at:
+        type: string
+    type: object
+  models.Seller:
+    properties:
+      address:
+        type: string
+      created_at:
+        type: string
+      email:
+        type: string
+      id:
+        type: integer
+      name:
+        type: string
+      pets:
+        items:
+          $ref: '#/definitions/models.Pet'
+        type: array
+      phone:
+        type: string
+      updated_at:
+        type: string
+    type: object
+  models.UpdatePetRequest:
+    properties:
+      age:
+        type: integer
+      available:
+        type: boolean
+      breed:
+        type: string
+      description:
+        type: string
+      name:
+        type: string
+      price:
+        type: number
+      seller_id:
+        type: integer
+      species:
+        type: string
+    type: object
+  models.UpdateSellerRequest:
+    properties:
+      address:
+        type: string
+      email:
+        type: string
+      name:
+        type: string
+      phone:
+        type: string
+    type: object
+host: localhost:8080
+info:
+  contact:
+    email: support@swagger.io
+    name: API Support
+    url: http://www.swagger.io/support
+  description: A pet store management API with sellers and pets
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/MIT
+  termsOfService: http://swagger.io/terms/
+  title: Pet Store API
+  version: "1.0"
+paths:
+  /pets:
+    get:
+      consumes:
+      - application/json
+      description: Get list of all pets with optional seller inclusion and filtering
+      parameters:
+      - description: Include seller information in response
+        in: query
+        name: include_seller
+        type: boolean
+      - description: Filter pets by seller ID
+        in: query
+        name: seller_id
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/handlers.Response'
+            - properties:
+                data:
+                  items:
+                    $ref: '#/definitions/models.Pet'
+                  type: array
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handlers.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handlers.Response'
+      summary: Get all pets
+      tags:
+      - pets
+    post:
+      consumes:
+      - application/json
+      description: Create a new pet with the provided information
+      parameters:
+      - description: Pet creation data
+        in: body
+        name: pet
+        required: true
+        schema:
+          $ref: '#/definitions/models.CreatePetRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            allOf:
+            - $ref: '#/definitions/handlers.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/models.Pet'
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handlers.Response'
+      summary: Create a new pet
+      tags:
+      - pets
+  /pets/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete a pet by ID
+      parameters:
+      - description: Pet ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handlers.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handlers.Response'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/handlers.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handlers.Response'
+      summary: Delete pet
+      tags:
+      - pets
+    get:
+      consumes:
+      - application/json
+      description: Get a single pet by ID with optional seller inclusion
+      parameters:
+      - description: Pet ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Include seller information in response
+        in: query
+        name: include_seller
+        type: boolean
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/handlers.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/models.Pet'
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handlers.Response'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/handlers.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handlers.Response'
+      summary: Get pet by ID
+      tags:
+      - pets
+    put:
+      consumes:
+      - application/json
+      description: Update an existing pet's information
+      parameters:
+      - description: Pet ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Pet update data
+        in: body
+        name: pet
+        required: true
+        schema:
+          $ref: '#/definitions/models.UpdatePetRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/handlers.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/models.Pet'
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handlers.Response'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/handlers.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handlers.Response'
+      summary: Update pet
+      tags:
+      - pets
+  /sellers:
+    get:
+      consumes:
+      - application/json
+      description: Get list of all sellers with optional pets inclusion
+      parameters:
+      - description: Include pets in response
+        in: query
+        name: include_pets
+        type: boolean
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/handlers.Response'
+            - properties:
+                data:
+                  items:
+                    $ref: '#/definitions/models.Seller'
+                  type: array
+              type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handlers.Response'
+      summary: Get all sellers
+      tags:
+      - sellers
+    post:
+      consumes:
+      - application/json
+      description: Create a new seller with the provided information
+      parameters:
+      - description: Seller creation data
+        in: body
+        name: seller
+        required: true
+        schema:
+          $ref: '#/definitions/models.CreateSellerRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            allOf:
+            - $ref: '#/definitions/handlers.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/models.Seller'
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handlers.Response'
+      summary: Create a new seller
+      tags:
+      - sellers
+  /sellers/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete a seller by ID (only if no pets are associated)
+      parameters:
+      - description: Seller ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handlers.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handlers.Response'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/handlers.Response'
+        "409":
+          description: Conflict
+          schema:
+            $ref: '#/definitions/handlers.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handlers.Response'
+      summary: Delete seller
+      tags:
+      - sellers
+    get:
+      consumes:
+      - application/json
+      description: Get a single seller by ID with optional pets inclusion
+      parameters:
+      - description: Seller ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Include pets in response
+        in: query
+        name: include_pets
+        type: boolean
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/handlers.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/models.Seller'
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handlers.Response'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/handlers.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handlers.Response'
+      summary: Get seller by ID
+      tags:
+      - sellers
+    put:
+      consumes:
+      - application/json
+      description: Update an existing seller's information
+      parameters:
+      - description: Seller ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Seller update data
+        in: body
+        name: seller
+        required: true
+        schema:
+          $ref: '#/definitions/models.UpdateSellerRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/handlers.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/models.Seller'
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handlers.Response'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/handlers.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handlers.Response'
+      summary: Update seller
+      tags:
+      - sellers
+schemes:
+- http
+- https
+swagger: "2.0"
