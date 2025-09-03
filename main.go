@@ -7,12 +7,13 @@ import (
 	"net/http"
 	"os"
 	"os/signal"
+	"petstore-api/repositories/user_items"
+	"petstore-api/repositories/users"
 	"syscall"
 	"time"
 
 	"petstore-api/config"
 	"petstore-api/handlers"
-	"petstore-api/repositories"
 	"petstore-api/routes"
 	"petstore-api/services"
 
@@ -42,8 +43,8 @@ func main() {
 	db := config.InitDB()
 	fmt.Println("Database initialized successfully")
 
-	sellerRepo := repositories.NewSellerRepository(db)
-	petRepo := repositories.NewPetRepository(db)
+	sellerRepo := users.NewSellerRepository(db)
+	petRepo := user_items.NewPetRepository(db)
 
 	sellerService := services.NewSellerService(sellerRepo, petRepo)
 	petService := services.NewPetService(petRepo, sellerRepo)

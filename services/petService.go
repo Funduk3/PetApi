@@ -11,10 +11,10 @@ import (
 
 type petService struct {
 	petRepo    repositories.PetRepository
-	sellerRepo repositories.SellerRepository
+	sellerRepo repositories.UserRepository
 }
 
-func NewPetService(petRepo repositories.PetRepository, sellerRepo repositories.SellerRepository) PetService {
+func NewPetService(petRepo repositories.PetRepository, sellerRepo repositories.UserRepository) PetService {
 	return &petService{
 		petRepo:    petRepo,
 		sellerRepo: sellerRepo,

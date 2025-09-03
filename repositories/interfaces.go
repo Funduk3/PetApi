@@ -2,13 +2,12 @@ package repositories
 
 import "petstore-api/models"
 
-type SellerRepository interface {
-	GetAll(includePets bool) ([]models.Seller, error)
-	GetByID(id uint, includePets bool) (*models.Seller, error)
-	Create(seller *models.Seller) error
-	Update(seller *models.Seller) error
+type UserRepository interface {
+	GetAll(includePets bool) ([]models.User, error)
+	GetByID(id uint, includePets bool) (*models.User, error)
+	Create(seller *models.User) error
+	Update(seller *models.User) error
 	Delete(id uint) error
-	GetPetCount(sellerID uint) (int64, error)
 }
 
 type PetRepository interface {
@@ -18,4 +17,10 @@ type PetRepository interface {
 	Update(pet *models.Pet) error
 	Delete(id uint) error
 	GetBySellerID(sellerID uint) ([]models.Pet, error)
+}
+
+type UserItemRepository interface {
+	AddPet(userID uint, petID uint) error
+	RemovePet(userID uint, petID uint) error
+	GetPetsByBuyerID(userID uint) ([]models.Pet, error)
 }

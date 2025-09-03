@@ -11,7 +11,7 @@ import (
 	"gorm.io/gorm"
 )
 
-type DatabaseConfig struct {
+type PostgresConfig struct {
 	Host     string
 	Port     string
 	User     string
@@ -20,8 +20,8 @@ type DatabaseConfig struct {
 	SSLMode  string
 }
 
-func GetDatabaseConfig() DatabaseConfig {
-	return DatabaseConfig{
+func GetDatabaseConfig() PostgresConfig {
+	return PostgresConfig{
 		Host:     getEnv("DB_HOST", "localhost"),
 		Port:     getEnv("DB_PORT", "5432"),
 		User:     getEnv("DB_USER", "postgres"),

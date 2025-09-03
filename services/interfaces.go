@@ -2,12 +2,12 @@ package services
 
 import "petstore-api/models"
 
-type SellerService interface {
-	GetAllSellers(includePets bool) ([]models.Seller, error)
-	GetSellerByID(id uint, includePets bool) (*models.Seller, error)
-	CreateSeller(req *models.CreateSellerRequest) (*models.Seller, error)
-	UpdateSeller(id uint, req *models.UpdateSellerRequest) (*models.Seller, error)
-	DeleteSeller(id uint) error
+type UserService interface {
+	GetAll(includePets bool) ([]models.User, error)
+	GetByID(id uint, includePets bool) (*models.User, error)
+	Create(req *models.CreateUserRequest) (*models.User, error)
+	Update(id uint, req *models.UpdateUserRequest) (*models.User, error)
+	Delete(id uint) error
 }
 
 type PetService interface {

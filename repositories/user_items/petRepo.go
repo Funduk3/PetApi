@@ -1,15 +1,16 @@
-package repositories
+package user_items
 
 import (
 	"gorm.io/gorm"
 	"petstore-api/models"
+	"petstore-api/repositories"
 )
 
 type petRepository struct {
 	db *gorm.DB
 }
 
-func NewPetRepository(db *gorm.DB) PetRepository {
+func NewPetRepository(db *gorm.DB) repositories.PetRepository {
 	return &petRepository{db: db}
 }
 

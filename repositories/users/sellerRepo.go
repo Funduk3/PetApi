@@ -1,20 +1,21 @@
-package repositories
+package users
 
 import (
 	"gorm.io/gorm"
 	"petstore-api/models"
+	"petstore-api/repositories"
 )
 
 type sellerRepository struct {
 	db *gorm.DB
 }
 
-func NewSellerRepository(db *gorm.DB) SellerRepository {
+func NewSellerRepository(db *gorm.DB) repositories.UserRepository {
 	return &sellerRepository{db: db}
 }
 
-func (r *sellerRepository) GetAll(includePets bool) ([]models.Seller, error) {
-	var sellers []models.Seller
+func (r *sellerRepository) GetAll(includePets bool) ([]models.User, error) {
+	var sellers []models.User
 	query := r.db
 
 	if includePets {
@@ -25,8 +26,8 @@ func (r *sellerRepository) GetAll(includePets bool) ([]models.Seller, error) {
 	return sellers, result.Error
 }
 
-func (r *sellerRepository) GetByID(id uint, includePets bool) (*models.Seller, error) {
-	var seller models.Seller
+func (r *sellerRepository) GetByID(id uint, includePets bool) (*models.User, error) {
+	var seller models.User
 	query := r.db
 
 	if includePets {
@@ -41,12 +42,12 @@ func (r *sellerRepository) GetByID(id uint, includePets bool) (*models.Seller, e
 	return &seller, nil
 }
 
-func (r *sellerRepository) Create(seller *models.Seller) error {
+func (r *sellerRepository) Create(seller *models.User) error {
 	result := r.db.Create(seller)
 	return result.Error
 }
 
-func (r *sellerRepository) Update(seller *models.Seller) error {
+func (r *sellerRepository) Update(seller *models.User) error {
 	result := r.db.Save(seller)
 	return result.Error
 }
